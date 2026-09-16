@@ -52,9 +52,5 @@
         <button type="submit" class="inline-flex items-center px-5 py-2.5 rounded bg-[#10b981] text-[#0a1f14] font-display uppercase text-sm font-semibold hover:bg-[#10b981]/90 transition-colors duration-200">
             Save
         </button>
-
-        @if (session('status') === 'password-updated')
-            <p class="text-sm text-[#10b981] font-medium">Password updated successfully.</p>
-        @endif
     </div>
 </form>

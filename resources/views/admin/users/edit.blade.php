@@ -17,12 +17,6 @@
 
     <div class="py-8">
         <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-            @if (session('error'))
-                <div class="mb-6 font-medium text-sm text-red-400 bg-[#1a1f14] p-4 rounded border border-red-500/40">
-                    {{ session('error') }}
-                </div>
-            @endif
-
             <div class="bg-[#0d2919] rounded border border-[#1a4030] p-6 sm:p-8">
                 <form method="POST" action="{{ route('admin.users.update', $user) }}" class="space-y-6">
                     @csrf

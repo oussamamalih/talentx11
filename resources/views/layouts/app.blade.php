@@ -32,6 +32,8 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="h-full font-sans antialiased" style="background-color: var(--tx-bg); color: var(--tx-text);">
+        <x-toast />
+
         <div class="min-h-screen flex flex-col" style="background-color: var(--tx-bg);">
             @include('layouts.navigation')
 

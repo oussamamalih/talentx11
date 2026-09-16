@@ -28,12 +28,6 @@
                     </p>
                 </div>
 
-                @if (session('status'))
-                    <div class="relative mb-4 font-medium text-sm text-[#10b981] bg-[#0d2919] border border-[#1a4030] border-l-4 border-l-[#10b981] p-4 rounded">
-                        {{ session('status') }}
-                    </div>
-                @endif
-
                 <form method="POST" action="{{ route('player.profile.update') }}" class="relative space-y-6">
                     @csrf
                     @method('PUT')

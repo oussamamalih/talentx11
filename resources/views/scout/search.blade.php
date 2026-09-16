@@ -56,15 +56,6 @@
                 </div>
             </form>
 
-            @if (session('status'))
-                <div class="font-medium text-sm text-[#10b981] bg-[#0d2919] border border-[#1a4030] border-l-4 border-l-[#10b981] p-4 rounded flex items-center mb-6">
-                    <svg class="w-5 h-5 me-2 text-[#10b981] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    {{ session('status') }}
-                </div>
-            @endif
-
             <p class="text-[#8fa89c] text-sm mb-6">{{ $players->total() }} player{{ $players->total() !== 1 ? 's' : '' }} found</p>
 
             @if($players->count())
