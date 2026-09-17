@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,10 +14,12 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, HasUlids, Notifiable;
 
     public const ROLE_PLAYER = 'player';
+
     public const ROLE_SCOUT = 'scout';
+
     public const ROLE_ADMIN = 'admin';
 
     /**
@@ -67,10 +70,10 @@ class User extends Authenticatable
     /**
      * Get the scout profile associated with the user.
      */
-     public function scoutProfile(): HasOne
-     {
-         return $this->hasOne(ScoutProfile::class);
-     }
+    public function scoutProfile(): HasOne
+    {
+        return $this->hasOne(ScoutProfile::class);
+    }
 
     /**
      * Get the scouting interests sent by the user (as a scout).
