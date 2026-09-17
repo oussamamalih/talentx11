@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\PlayerProfile;
-use App\Models\ScoutProfile;
 use App\Models\ScoutingInterest;
+use App\Models\ScoutProfile;
 use App\Models\User;
 use App\Notifications\ScoutingInterestReceived;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -325,5 +325,54 @@ class NotificationTest extends TestCase
         // Player 1 has 0 unread, Player 2 still has 1 unread
         $this->assertEquals(0, $player1->fresh()->unreadNotifications()->count());
         $this->assertEquals(1, $player2->fresh()->unreadNotifications()->count());
+    }
+
+    public function test_scout_expressing_interest_includes_mail_channel_in_notification(): void
+    {
+        Notification::fake();
+
+        $scout = User::factory()->scout()->create();
+        ScoutProfile::factory()->create(['user_id' => $scout->id, 'organization' => 'FUS Rabat Academy']);
+
+        $player = User::factory()->player()->create();
+        $playerProfile = PlayerProfile::factory()->create(['user_id' => $player->id]);
+
+        $this->actingAs($scout)->post(route('scouting.interests.store', $playerProfile), [
+            'message' => 'Trial invitation for you.',
+        ]);
+
+        Notification::assertSentTo(
+            $player,
+            ScoutingInterestReceived::class,
+            function (ScoutingInterestReceived $notification) use ($player, $playerProfile, $scout) {
+                return $notification->scoutingInterest->player_profile_id === $playerProfile->id
+                    && $notification->scoutingInterest->scout_id === $scout->id
+                    && in_array('database', $notification->via($player), true)
+                    && in_array('mail', $notification->via($player), true);
+            }
+        );
+    }
+
+    public function test_scout_expressing_interest_sends_email_to_player_address(): void
+    {
+        Notification::fake();
+
+        $scout = User::factory()->scout()->create();
+        ScoutProfile::factory()->create(['user_id' => $scout->id, 'organization' => 'Sevilla FC Academy']);
+
+        $player = User::factory()->player()->create(['email' => 'player@example.com']);
+        $playerProfile = PlayerProfile::factory()->create(['user_id' => $player->id]);
+
+        $this->actingAs($scout)->post(route('scouting.interests.store', $playerProfile), [
+            'message' => 'We would like to invite you for a trial.',
+        ]);
+
+        Notification::assertSentTo(
+            $player,
+            ScoutingInterestReceived::class,
+            function (ScoutingInterestReceived $notification) use ($player) {
+                return $notification->via($player) === ['database', 'mail'];
+            }
+        );
     }
 }
